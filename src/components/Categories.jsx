@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 
 
@@ -36,6 +36,7 @@ import React, { useState } from 'react';
 //               {name}
 //             </li>
 //           ))}
+
 //         </ul>
 //       </div>
 //     );
@@ -55,9 +56,11 @@ function Categories({items, onClickItem}) {
   return (
     <div className='categories'>
       <ul>
-        <li className={activeItem === null ? "active" : ""} onClick={() => onSelectItem(null)}>
+        <li className={activeItem === null ? "active" : ""} 
+        onClick={() => onSelectItem(null)}>
           Все
         </li>
+
         {items &&
         items.map((name, index) => (
           <li
