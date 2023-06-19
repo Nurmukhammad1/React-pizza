@@ -1,37 +1,61 @@
 import React from 'react';
 import {Routes, Route} from 'react-router-dom';
 import  axios from 'axios';
+import {connect} from 'react-redux';
 
 import Header from './components/Header';
 import {Home, Cart} from './pages';
+import { setPizzas as setPizzasAction } from './redux/action/pizzas-action';
 
 
 
+// function App() {
+//   // // fetch запрос по получению данных по товарам
+//   // React.useEffect(() =>{
+//   //   fetch('http://localhost:3000/db.json').then((resp) => resp.json()).then(json =>{
+//   //       setPizzas(json.pizzas);
+//   //   });
+//   // },[]);
 
-function App() {
-  const [pizzas, setPizzas] = React.useState([]);
+//   // axios запрос по получению данных по товаров из json 
+//   React.useEffect(() =>{
+//     axios.get('http://localhost:3000/db.json').then(({data}) => {
+//      setPizzas(data.pizzas)
+//     });
+//   },[]);
 
-  // // fetch запрос по получению данных по товарам
-  // React.useEffect(() =>{
-  //   fetch('http://localhost:3000/db.json').then((resp) => resp.json()).then(json =>{
-  //       setPizzas(json.pizzas);
-  //   });
-  // },[]);
+//   // return (
+//   //   <>
+//   //     <div className='wrapper'>
+//   //       <Header /> {/* Добавление функционального компонента Header*/}
+//   //       <div className='content'>
+//   //         <Routes>
+//   //           <Route path="/"  element={<Home items={pizzas}/>}></Route>
+//   //           <Route path="/cart"  element={Cart}></Route>    
+//   //         </Routes>
+        
+         
+       
+//   //       </div>
+//   //     </div>
+//   //   </>
+//   // );
+// }
 
-  // axios запрос по получению данных по товаров из json 
-  React.useEffect(() =>{
+class App extends React.Component{
+  componentDidMount(){
     axios.get('http://localhost:3000/db.json').then(({data}) => {
-     setPizzas(data.pizzas)
-    });
-  },[]);
-
-  return (
+           this.props.setPizzas(data.pizzas);
+          });
+  }
+  render(){
+      return (
     <>
       <div className='wrapper'>
         <Header /> {/* Добавление функционального компонента Header*/}
         <div className='content'>
           <Routes>
-            <Route path="/"  element={<Home items={pizzas}/>}></Route>
+            <Route path="/"  element={<Home items={this.props.items} />}></Route>
             <Route path="/cart"  element={Cart}></Route>    
           </Routes>
         
@@ -41,7 +65,23 @@ function App() {
       </div>
     </>
   );
+  }
 }
 
-export default App;
+
+const mapStateToProps = (state) =>{
+ return {
+  items: state.pizzas.items
+ }
+};
+
+
+// функция для внедрения action-creator во внутрь props
+const mapDispatchToProps = (dispatch) =>{
+  return {
+    setPizzas: (items) => dispatch(setPizzasAction(items))
+  }
+}
+
+export default connect (mapStateToProps, mapDispatchToProps) (App);
 
